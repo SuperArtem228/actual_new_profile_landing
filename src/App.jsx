@@ -251,24 +251,20 @@ const PortfolioApp = () => {
   };
 
   const GlassCard = ({ children, className = '', delay = 0 }) => {
-    return (
-      <motion.div
-        initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
-        whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.5, delay }}
-        className={`backdrop-blur-xl rounded-3xl p-6 border transition-all ${className}`}
-        style={{
-          background: colors.glass,
-          borderColor: colors.glassBorder,
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
-        }}
-        whileHover={prefersReducedMotion ? {} : { scale: 1.02, transition: { duration: 0.2 } }}
-      >
-        {children}
-      </motion.div>
-    );
-  };
+  return (
+    <motion.div
+      initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
+      whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.5, delay }}
+      className={`liquid-glass p-6 transition-all ${className}`}
+      whileHover={prefersReducedMotion ? {} : { scale: 1.02, transition: { duration: 0.2 } }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 
   const Pill = ({ children, variant = 'default', className = '' }) => {
     const bg = variant === 'lime' ? colors.accentLime : 
@@ -291,12 +287,18 @@ const PortfolioApp = () => {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={ariaLabel}
-      className="w-12 h-12 rounded-full backdrop-blur-xl flex items-center justify-center border transition-all hover:scale-110"
-      style={{
-        background: colors.glass,
-        borderColor: colors.glassBorder
-      }}
-    >
+      const IconButton = ({ icon: Icon, href, ariaLabel }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label={ariaLabel}
+    className="liquid-icon w-12 h-12 flex items-center justify-center"
+  >
+    <Icon size={20} style={{ color: colors.textPrimary }} />
+  </a>
+);
+
       <Icon size={20} style={{ color: colors.textPrimary }} />
     </a>
   );
@@ -307,6 +309,17 @@ const PortfolioApp = () => {
     style={{ 
   background: colors.bgPrimary,
   color: colors.textPrimary,
+
+  '--glass-bg': colors.glass,
+  '--glass-border': colors.glassBorder,
+
+  '--chip-bg': theme === 'light'
+    ? 'rgba(255,255,255,0.55)'
+    : 'rgba(26,27,23,0.55)',
+
+  '--chip-border': colors.strokeSoft
+}}
+
 
   '--glass-bg': colors.glass,
   '--glass-border': colors.glassBorder,
@@ -449,11 +462,10 @@ const PortfolioApp = () => {
                     {result.levers.map((lever, j) => (
                       <span 
                         key={j}
-                        className="px-3 py-1 rounded-full text-xs border"
-                        style={{ 
-                          borderColor: colors.strokeSoft,
-                          background: colors.bgSecondary 
-                        }}
+                        <span key={j} className="liquid-chip px-3 py-1 text-xs">
+  {lever}
+</span>
+
                       >
                         {lever}
                       </span>
@@ -555,14 +567,10 @@ const PortfolioApp = () => {
                   {items.map((skill, j) => (
                     <span 
                       key={j}
-                      className="px-4 py-2 rounded-full text-sm border"
-                      style={{ 
-                        borderColor: colors.strokeSoft,
-                        background: colors.bgSecondary 
-                      }}
-                    >
-                      {skill}
-                    </span>
+                      <span key={j} className="liquid-chip px-4 py-2 text-sm">
+  {skill}
+</span>
+
                   ))}
                 </div>
               </GlassCard>
