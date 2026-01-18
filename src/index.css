@@ -8,11 +8,11 @@
   overflow: hidden;
   border-radius: 28px;
 
-  background: var(--glass-bg);
+  background: color-mix(in srgb, var(--glass-bg) 65%, transparent);
   border: 1px solid var(--glass-border);
 
-  -webkit-backdrop-filter: blur(22px) saturate(170%) contrast(1.05);
-  backdrop-filter: blur(22px) saturate(170%) contrast(1.05);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
 
   box-shadow:
     0 18px 60px rgba(0,0,0,0.10),
@@ -62,7 +62,7 @@
   overflow:hidden;
   border-radius:999px;
   border:1px solid var(--chip-border);
-  background: var(--chip-bg);
+  background: color-mix(in srgb, var(--chip-bg) 65%, transparent);
 
   -webkit-backdrop-filter: blur(14px) saturate(160%);
   backdrop-filter: blur(14px) saturate(160%);
@@ -73,7 +73,7 @@
   overflow:hidden;
   border-radius:999px;
   border:1px solid var(--glass-border);
-  background: var(--glass-bg);
+  background: color-mix(in srgb, var(--glass-bg) 65%, transparent);
 
   -webkit-backdrop-filter: blur(18px) saturate(170%);
   backdrop-filter: blur(18px) saturate(170%);

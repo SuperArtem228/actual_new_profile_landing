@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import { Mail, Linkedin, FileText, Send, Sun, Moon, ChevronDown, ExternalLink } from 'lucide-react';
+import { Mail, Linkedin, FileText, Send, Sun, Moon } from 'lucide-react';
+import { LiquidGlassCard } from './components/ui/liquid-weather-glass';
 
 // Design Tokens - Golden Apple Style
 const tokens = {
@@ -16,7 +17,7 @@ const tokens = {
     accentLimeDark: '#758215',
     accentPink: '#FB6ACA',
     chrome: '#D6D7D7',
-    glass: 'rgba(255, 255, 255, 0.6)',
+    glass: 'rgba(255, 255, 255, 0.25)',
     glassBorder: 'rgba(0, 0, 0, 0.08)'
   },
   dark: {
@@ -31,7 +32,7 @@ const tokens = {
     accentLimeDark: '#758215',
     accentPink: '#FB6ACA',
     chrome: '#D6D7D7',
-    glass: 'rgba(26, 27, 23, 0.6)',
+    glass: 'rgba(26, 27, 23, 0.35)',
     glassBorder: 'rgba(255, 255, 255, 0.1)'
   }
 };
@@ -250,34 +251,58 @@ const PortfolioApp = () => {
     );
   };
 
-  const GlassCard = ({ children, className = '', delay = 0 }) => {
-  return (
-    <motion.div
-      initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
-      whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.5, delay }}
-      className={`liquid-glass p-6 transition-all ${className}`}
-      whileHover={prefersReducedMotion ? {} : { scale: 1.02, transition: { duration: 0.2 } }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+  const GlassCard = ({ children, className = '' }) => {
+    return (
+      <LiquidGlassCard
+        draggable={false}
+        expandable={false}
+        blurIntensity="xl"
+        glowIntensity="sm"
+        shadowIntensity="md"
+        borderRadius="28px"
+        className={`p-6 bg-white/10 dark:bg-white/5 transition-all ${className}`}
+      >
+        {children}
+      </LiquidGlassCard>
+    );
+  };
 
 
   const Pill = ({ children, variant = 'default', className = '' }) => {
     const bg = variant === 'lime' ? colors.accentLime : 
                 variant === 'chrome' ? colors.chrome : colors.bgTertiary;
     const text = variant === 'lime' ? colors.textPrimary : colors.textPrimary;
+    const border = variant === 'lime' ? colors.accentLimeDark : colors.glassBorder;
 
     return (
       <span 
-        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${className}`}
-        style={{ background: bg, color: text }}
+        className={`liquid-chip inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${className}`}
+        style={{ background: bg, color: text, borderColor: border }}
       >
         {children}
       </span>
+    );
+  };
+
+  const LiquidButton = ({ children, href, className = '', style = {}, ...props }) => {
+    const content = (
+      <span
+        className={`liquid-glass inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-medium transition-all hover:scale-105 ${className}`}
+        style={style}
+        {...props}
+      >
+        {children}
+      </span>
+    );
+
+    if (!href) {
+      return content;
+    }
+
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        {content}
+      </a>
     );
   };
 
@@ -287,18 +312,8 @@ const PortfolioApp = () => {
       target="_blank"
       rel="noopener noreferrer"
       aria-label={ariaLabel}
-      const IconButton = ({ icon: Icon, href, ariaLabel }) => (
-  <a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label={ariaLabel}
-    className="liquid-icon w-12 h-12 flex items-center justify-center"
-  >
-    <Icon size={20} style={{ color: colors.textPrimary }} />
-  </a>
-);
-
+      className="liquid-icon w-12 h-12 flex items-center justify-center"
+    >
       <Icon size={20} style={{ color: colors.textPrimary }} />
     </a>
   );
@@ -306,31 +321,16 @@ const PortfolioApp = () => {
   return (
     <div 
       className="min-h-screen relative overflow-hidden transition-colors duration-300"
-    style={{ 
-  background: colors.bgPrimary,
-  color: colors.textPrimary,
-
-  '--glass-bg': colors.glass,
-  '--glass-border': colors.glassBorder,
-
-  '--chip-bg': theme === 'light'
-    ? 'rgba(255,255,255,0.55)'
-    : 'rgba(26,27,23,0.55)',
-
-  '--chip-border': colors.strokeSoft
-}}
-
-
-  '--glass-bg': colors.glass,
-  '--glass-border': colors.glassBorder,
-
-  '--chip-bg': theme === 'light'
-    ? 'rgba(255,255,255,0.55)'
-    : 'rgba(26,27,23,0.55)',
-
-  '--chip-border': colors.strokeSoft
-}}
-
+      style={{ 
+        background: colors.bgPrimary,
+        color: colors.textPrimary,
+        '--glass-bg': colors.glass,
+        '--glass-border': colors.glassBorder,
+        '--chip-bg': theme === 'light'
+          ? 'rgba(255,255,255,0.3)'
+          : 'rgba(26,27,23,0.35)',
+        '--chip-border': colors.strokeSoft
+      }}
     >
       {/* Noise Overlay */}
       <div 
@@ -359,11 +359,7 @@ const PortfolioApp = () => {
             />
             <button
               onClick={toggleTheme}
-              className="w-12 h-12 rounded-full backdrop-blur-xl flex items-center justify-center border transition-all hover:scale-110"
-              style={{
-                background: colors.glass,
-                borderColor: colors.glassBorder
-              }}
+              className="liquid-icon w-12 h-12 flex items-center justify-center"
               aria-label="Toggle theme"
             >
               {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
@@ -402,30 +398,24 @@ const PortfolioApp = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <a href="https://ekaterinburg.hh.ru/resume/6d6458b5ff0fca29e60039ed1f366743483038" target="_blank" rel="noopener noreferrer">
-              <button 
-                className="px-8 py-4 rounded-full font-medium transition-all hover:scale-105"
-                style={{ background: colors.accentLime, color: colors.textPrimary }}
-              >
-                Открыть резюме
-              </button>
-            </a>
-            <a href="https://t.me/K2a33b" target="_blank" rel="noopener noreferrer">
-              <button 
-                className="px-8 py-4 rounded-full font-medium backdrop-blur-xl border transition-all hover:scale-105"
-                style={{ background: colors.glass, borderColor: colors.glassBorder }}
-              >
-                Написать в Telegram
-              </button>
-            </a>
-            <a href="https://www.linkedin.com/in/artem-popov-a05b65323/" target="_blank" rel="noopener noreferrer">
-              <button 
-                className="px-8 py-4 rounded-full font-medium backdrop-blur-xl border transition-all hover:scale-105"
-                style={{ background: colors.glass, borderColor: colors.glassBorder }}
-              >
-                LinkedIn
-              </button>
-            </a>
+            <LiquidButton
+              href="https://ekaterinburg.hh.ru/resume/6d6458b5ff0fca29e60039ed1f366743483038"
+              style={{ background: colors.accentLime, color: colors.textPrimary }}
+            >
+              Открыть резюме
+            </LiquidButton>
+            <LiquidButton
+              href="https://t.me/K2a33b"
+              style={{ background: colors.glass, color: colors.textPrimary }}
+            >
+              Написать в Telegram
+            </LiquidButton>
+            <LiquidButton
+              href="https://www.linkedin.com/in/artem-popov-a05b65323/"
+              style={{ background: colors.glass, color: colors.textPrimary }}
+            >
+              LinkedIn
+            </LiquidButton>
           </motion.div>
         </div>
       </section>
@@ -437,7 +427,7 @@ const PortfolioApp = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
             {keyResults.map((result, i) => (
-              <GlassCard key={i} delay={i * 0.1}>
+              <GlassCard key={i}>
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex flex-wrap gap-2">
                     <Pill variant="default">{result.company}</Pill>
@@ -460,13 +450,7 @@ const PortfolioApp = () => {
                   <div className="text-sm mb-2" style={{ color: colors.textSecondary }}>За счёт:</div>
                   <div className="flex flex-wrap gap-2">
                     {result.levers.map((lever, j) => (
-                      <span 
-                        key={j}
-                        <span key={j} className="liquid-chip px-3 py-1 text-xs">
-  {lever}
-</span>
-
-                      >
+                      <span key={j} className="liquid-chip px-3 py-1 text-xs">
                         {lever}
                       </span>
                     ))}
@@ -485,7 +469,7 @@ const PortfolioApp = () => {
           
           <div className="space-y-6">
             {experiences.map((exp, i) => (
-              <GlassCard key={i} delay={i * 0.1}>
+              <GlassCard key={i}>
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="text-2xl font-bold">{exp.company}</h3>
@@ -521,7 +505,7 @@ const PortfolioApp = () => {
           
           <div className="grid md:grid-cols-2 gap-6">
             {projects.map((project, i) => (
-              <GlassCard key={i} delay={i * 0.1}>
+              <GlassCard key={i}>
                 <div className="text-xs mb-2" style={{ color: colors.textSecondary }}>{project.category}</div>
                 <h3 className="text-2xl font-bold mb-4">{project.title}</h3>
                 
@@ -556,7 +540,7 @@ const PortfolioApp = () => {
           
           <div className="space-y-6">
             {Object.entries(skills).map(([category, items], i) => (
-              <GlassCard key={i} delay={i * 0.1}>
+              <GlassCard key={i}>
                 <h3 
                   className="text-xl font-bold mb-4"
                   style={{ color: colors.accentLimeDark }}
@@ -565,12 +549,9 @@ const PortfolioApp = () => {
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {items.map((skill, j) => (
-                    <span 
-                      key={j}
-                      <span key={j} className="liquid-chip px-4 py-2 text-sm">
-  {skill}
-</span>
-
+                    <span key={j} className="liquid-chip px-4 py-2 text-sm">
+                      {skill}
+                    </span>
                   ))}
                 </div>
               </GlassCard>
@@ -636,41 +617,38 @@ const PortfolioApp = () => {
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
-              <a href="https://t.me/K2a33b" target="_blank" rel="noopener noreferrer">
-                <button 
-                  className="w-full px-6 py-4 rounded-full font-medium transition-all hover:scale-105 flex items-center justify-center gap-2"
-                  style={{ background: colors.accentLime, color: colors.textPrimary }}
-                >
-                  <Send size={20} /> Telegram
-                </button>
-              </a>
+              <LiquidButton
+                href="https://t.me/K2a33b"
+                className="w-full"
+                style={{ background: colors.accentLime, color: colors.textPrimary }}
+              >
+                <Send size={20} /> Telegram
+              </LiquidButton>
               
               <a href="mailto:artem.product.manager12@gmail.com">
-                <button 
-                  className="w-full px-6 py-4 rounded-full font-medium backdrop-blur-xl border transition-all hover:scale-105 flex items-center justify-center gap-2"
-                  style={{ background: colors.glass, borderColor: colors.glassBorder }}
+                <LiquidButton
+                  className="w-full"
+                  style={{ background: colors.glass, color: colors.textPrimary }}
                 >
                   <Mail size={20} /> Email
-                </button>
+                </LiquidButton>
               </a>
 
-              <a href="https://www.linkedin.com/in/artem-popov-a05b65323/" target="_blank" rel="noopener noreferrer">
-                <button 
-                  className="w-full px-6 py-4 rounded-full font-medium backdrop-blur-xl border transition-all hover:scale-105 flex items-center justify-center gap-2"
-                  style={{ background: colors.glass, borderColor: colors.glassBorder }}
-                >
-                  <Linkedin size={20} /> LinkedIn
-                </button>
-              </a>
+              <LiquidButton
+                href="https://www.linkedin.com/in/artem-popov-a05b65323/"
+                className="w-full"
+                style={{ background: colors.glass, color: colors.textPrimary }}
+              >
+                <Linkedin size={20} /> LinkedIn
+              </LiquidButton>
 
-              <a href="https://ekaterinburg.hh.ru/resume/6d6458b5ff0fca29e60039ed1f366743483038" target="_blank" rel="noopener noreferrer">
-                <button 
-                  className="w-full px-6 py-4 rounded-full font-medium backdrop-blur-xl border transition-all hover:scale-105 flex items-center justify-center gap-2"
-                  style={{ background: colors.glass, borderColor: colors.glassBorder }}
-                >
-                  <FileText size={20} /> Резюме HH
-                </button>
-              </a>
+              <LiquidButton
+                href="https://ekaterinburg.hh.ru/resume/6d6458b5ff0fca29e60039ed1f366743483038"
+                className="w-full"
+                style={{ background: colors.glass, color: colors.textPrimary }}
+              >
+                <FileText size={20} /> Резюме HH
+              </LiquidButton>
             </div>
           </GlassCard>
         </div>
