@@ -304,10 +304,20 @@ const PortfolioApp = () => {
   return (
     <div 
       className="min-h-screen relative overflow-hidden transition-colors duration-300"
-      style={{ 
-        background: colors.bgPrimary,
-        color: colors.textPrimary
-      }}
+    style={{ 
+  background: colors.bgPrimary,
+  color: colors.textPrimary,
+
+  '--glass-bg': colors.glass,
+  '--glass-border': colors.glassBorder,
+
+  '--chip-bg': theme === 'light'
+    ? 'rgba(255,255,255,0.55)'
+    : 'rgba(26,27,23,0.55)',
+
+  '--chip-border': colors.strokeSoft
+}}
+
     >
       {/* Noise Overlay */}
       <div 
