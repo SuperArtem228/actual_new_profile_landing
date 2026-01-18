@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use client';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -46,10 +45,10 @@ export const LiquidGlassCard = ({
   };
 
   const blurClasses = {
-    sm: 'backdrop-blur-sm',
-    md: 'backdrop-blur-md',
-    lg: 'backdrop-blur-lg',
-    xl: 'backdrop-blur-xl',
+    sm: 'backdrop-blur-none',
+    md: 'backdrop-blur-none',
+    lg: 'backdrop-blur-none',
+    xl: 'backdrop-blur-none',
   };
 
   const shadowStyles = {
@@ -126,77 +125,47 @@ export const LiquidGlassCard = ({
       : {};
 
   return (
-    <>
-      {/* Hidden SVG Filter */}
-      <svg className='hidden'>
-        <defs>
-          <filter
-            id='glass-blur'
-            x='0'
-            y='0'
-            width='100%'
-            height='100%'
-            filterUnits='objectBoundingBox'
-          >
-            <feTurbulence
-              type='fractalNoise'
-              baseFrequency='0.003 0.007'
-              numOctaves='1'
-              result='turbulence'
-            />
-            <feDisplacementMap
-              in='SourceGraphic'
-              in2='turbulence'
-              scale='200'
-              xChannelSelector='R'
-              yChannelSelector='G'
-            />
-          </filter>
-        </defs>
-      </svg>
-      <MotionComponent
-        className={cn(
-          `relative ${draggable ? 'cursor-grab active:cursor-grabbing' : ''} ${expandable ? 'cursor-pointer' : ''}`,
-          className
-        )}
+    <MotionComponent
+      className={cn(
+        `relative ${draggable ? 'cursor-grab active:cursor-grabbing' : ''} ${expandable ? 'cursor-pointer' : ''}`,
+        className
+      )}
+      style={{
+        borderRadius,
+        ...(width && !expandable && { width }),
+        ...(height && !expandable && { height }),
+      }}
+      {...motionProps}
+      {...props}
+    >
+      {/* Transparent layer (no distortion) */}
+      <div
+        className={`absolute inset-0 ${blurClasses[blurIntensity]} z-0`}
         style={{
           borderRadius,
-          ...(width && !expandable && { width }),
-          ...(height && !expandable && { height }),
         }}
-        {...motionProps}
-        {...props}
-      >
-        {/* Bend Layer (Backdrop blur with distortion) */}
-        <div
-          className={`absolute inset-0 ${blurClasses[blurIntensity]} z-0`}
-          style={{
-            borderRadius,
-            filter: 'url(#glass-blur)',
-          }}
-        />
+      />
 
-        {/* Face Layer (Main shadow and glow) */}
-        <div
-          className='absolute inset-0 z-10'
-          style={{
-            borderRadius,
-            boxShadow: glowStyles[glowIntensity],
-          }}
-        />
+      {/* Face Layer (Main shadow and glow) */}
+      <div
+        className='absolute inset-0 z-10'
+        style={{
+          borderRadius,
+          boxShadow: glowStyles[glowIntensity],
+        }}
+      />
 
-        {/* Edge Layer (Inner highlights) */}
-        <div
-          className='absolute inset-0 z-20'
-          style={{
-            borderRadius,
-            boxShadow: shadowStyles[shadowIntensity],
-          }}
-        />
+      {/* Edge Layer (Inner highlights) */}
+      <div
+        className='absolute inset-0 z-20'
+        style={{
+          borderRadius,
+          boxShadow: shadowStyles[shadowIntensity],
+        }}
+      />
 
-        {/* Content */}
-        <div className={cn('relative z-30')}>{children}</div>
-      </MotionComponent>
-    </>
+      {/* Content */}
+      <div className={cn('relative z-30')}>{children}</div>
+    </MotionComponent>
   );
 };
