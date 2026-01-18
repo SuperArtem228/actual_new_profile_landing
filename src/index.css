@@ -1,120 +1,51 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
 
-/* ========== Liquid Glass ========== */
-.liquid-glass{
+body {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.liquid-glass {
   position: relative;
   overflow: hidden;
   border-radius: 28px;
 
-  background: var(--glass-bg);
+  background: color-mix(in srgb, var(--glass-bg) 65%, transparent);
   border: 1px solid var(--glass-border);
 
-  -webkit-backdrop-filter: blur(22px) saturate(170%) contrast(1.05);
-  backdrop-filter: blur(22px) saturate(170%) contrast(1.05);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  backdrop-filter: blur(28px) saturate(180%);
 
   box-shadow:
     0 18px 60px rgba(0,0,0,0.10),
-    0 2px 10px rgba(0,0,0,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.38);
+    0 6px 20px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    inset 0 -1px 0 rgba(0,0,0,0.05);
 }
 
-.liquid-glass::before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  pointer-events:none;
-  background:
-    radial-gradient(600px 220px at 20% 0%,
-      rgba(255,255,255,0.55),
-      rgba(255,255,255,0.08) 45%,
-      transparent 70%),
-    radial-gradient(420px 240px at 85% 15%,
-      rgba(223,247,61,0.18),
-      transparent 65%);
-  opacity:0.95;
-}
-
-.liquid-glass::after{
-  content:"";
-  position:absolute;
-  inset:-60px;
-  pointer-events:none;
-  background:
-    radial-gradient(closest-side at 30% 55%, rgba(255,255,255,0.10), transparent 55%),
-    radial-gradient(closest-side at 70% 35%, rgba(255,255,255,0.08), transparent 60%),
-    radial-gradient(closest-side at 60% 80%, rgba(223,247,61,0.10), transparent 65%);
-  opacity:0.6;
-  filter: blur(18px);
-  transform: translate3d(0,0,0);
-}
-
-.liquid-glass:hover{
-  box-shadow:
-    0 22px 70px rgba(0,0,0,0.12),
-    0 3px 14px rgba(0,0,0,0.08),
-    inset 0 1px 0 rgba(255,255,255,0.42);
-}
-
-.liquid-chip{
-  position:relative;
+.liquid-chip {
+  position: relative;
   overflow:hidden;
   border-radius:999px;
   border:1px solid var(--chip-border);
-  background: var(--chip-bg);
+  background: color-mix(in srgb, var(--chip-bg) 65%, transparent);
 
   -webkit-backdrop-filter: blur(14px) saturate(160%);
   backdrop-filter: blur(14px) saturate(160%);
 }
 
-.liquid-icon{
-  position:relative;
+.liquid-icon {
+  position: relative;
   overflow:hidden;
   border-radius:999px;
   border:1px solid var(--glass-border);
-  background: var(--glass-bg);
+  background: color-mix(in srgb, var(--glass-bg) 65%, transparent);
 
   -webkit-backdrop-filter: blur(18px) saturate(170%);
   backdrop-filter: blur(18px) saturate(170%);
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.10),
-    inset 0 1px 0 rgba(255,255,255,0.35);
-
-  transition: transform 180ms ease, box-shadow 180ms ease;
-}
-
-.liquid-icon:hover{
-  transform: scale(1.08);
-  box-shadow:
-    0 14px 40px rgba(0,0,0,0.12),
-    inset 0 1px 0 rgba(255,255,255,0.42);
-}
-
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .liquid-glass, .liquid-icon, .liquid-chip{
-    background: rgba(255,255,255,0.88);
-  }
-}
-
-
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#root {
-  width: 100%;
-  min-height: 100vh;
 }
